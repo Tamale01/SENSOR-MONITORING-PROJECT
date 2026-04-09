@@ -1,0 +1,74 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Sensor Monitor v1.0</h1>
+    <p>Sensor data control center.</p>
+</div>
+
+<div class="container mt-4">
+    <div class="row">
+
+        <!-- Temperature Bar Chart -->
+        <div class="col-md-6">
+            <h5 class="text-center">Temperature (°C)</h5>
+            <canvas id="temperatureChart"></canvas>
+        </div>
+
+        <!-- Humidity Line Chart -->
+        <div class="col-md-6">
+            <h5 class="text-center">Humidity (%)</h5>
+            <canvas id="humidityChart"></canvas>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Data from ViewBag
+    const labels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.Labels));
+    const temperatureData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.Temperature));
+    const humidityData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.Humidity));
+
+    // Temperature Bar Chart
+    new Chart(document.getElementById('temperatureChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Temperature (°C)',
+                data: temperatureData,
+                backgroundColor: '#36a2eb'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    // Humidity Line Chart
+    new Chart(document.getElementById('humidityChart').getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Humidity (%)',
+                data: humidityData,
+                borderColor: '#36a2eb',
+                backgroundColor: 'rgba(54,162,235,0.2)',
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>
